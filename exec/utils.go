@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
 func prepareCommand(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (*exec.Cmd, error) {
@@ -16,7 +16,9 @@ func prepareCommand(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 
 	plugin.Logger(ctx).Warn("listLocalCommand", "conf", conf)
 
-	command := d.KeyColumnQuals["command"].GetStringValue()
+	commandQuals := d.EqualsQuals
+	command := commandQuals["command"].GetStringValue()
+
 	if command == "" {
 		// Empty command returns zero rows
 		return nil, nil

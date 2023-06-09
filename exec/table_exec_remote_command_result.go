@@ -7,12 +7,12 @@ import (
 	"sync"
 
 	"github.com/mitchellh/go-linereader"
-	"github.com/turbot/go-exec-communicator"
+	communicator "github.com/turbot/go-exec-communicator"
 	"github.com/turbot/go-exec-communicator/remote"
 	"github.com/turbot/go-exec-communicator/shared"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 func tableExecRemoteCommandResult(ctx context.Context) *plugin.Table {
@@ -41,7 +41,9 @@ func listRemoteCommandResult(ctx context.Context, d *plugin.QueryData, h *plugin
 
 	conf := GetConfig(d.Connection)
 
-	command := d.KeyColumnQuals["command"].GetStringValue()
+	commandQuals := d.EqualsQuals
+	command := commandQuals["command"].GetStringValue()
+
 	if command == "" {
 		// Empty command returns zero rows
 		return nil, nil
